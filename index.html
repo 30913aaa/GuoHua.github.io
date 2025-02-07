@@ -1,10 +1,21 @@
 <html>
 	<head>
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-PJR0486ZQN"></script>
+		<script>
+  		window.dataLayer = window.dataLayer || [];
+  		function gtag(){dataLayer.push(arguments);}
+  		gtag('js', new Date());
+
+  		gtag('config', 'G-PJR0486ZQN');
+		</script>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="shortcut icon" href="./statics/favicon-32x32.jpg">
 		<link href="./statics/style.min3.css" rel="stylesheet">
 		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
 		<meta name="description" content="GuoHua的自我介绍">
+		<script defer src="https://cdn.jsdelivr.net/npm/mermaid@8.9.2/dist/mermaid.min.js" 
+		integrity="sha256-Zmpaaj&#43;GXFsPF5WdPArSrnW3b30dovldeKsW00xBVwE="  crossorigin></script>
 		<title>About me</title>
 		<style>
 			body {
@@ -12,8 +23,27 @@
 			}
 		</style>
 	</head>
+	
 	<body>
+		
+		<div class="flex">
+            <div class="relative pt-4 md:pt-0">
+                <div class="cursor-pointer hover:text-eureka" id="lightDarkMode">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id="is-open">
+                </div>
+                <div class="absolute flex flex-col start-0 md:start-auto end-auto md:end-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40"
+                    id='lightDarkOptions'>
+                    <span class="px-4 py-1 hover:text-eureka" name="Light">浅色</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Dark">深色</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Auto">自动</span>
+                </div>
+            </div>
+        </div>
+    </div>
 		<div class="main-container" id="mainc">
+			
 			<div class="section header grid-container">
 				<div class="picture-container grid-30">
 					<a href="">
@@ -112,7 +142,7 @@
 				<p class="project-description">使用vpython實現</p>
 				<div class="project-meta">
 				  <span>📅 2025-02-06</span>
-				  <span>⏳ 3分鐘閱讀</span>
+				  <span>⏳ 6分鐘閱讀</span>
 				</div>
 			  </div>
 			
