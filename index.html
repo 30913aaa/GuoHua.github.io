@@ -19,29 +19,15 @@
 		<title>About me</title>
 		<style>
 			body {
-				background-image: url(./statics/cloud.jpg)
+				background-image: url(./statics/cloud.jpg);
 			}
 		</style>
+		
 	</head>
 	
 	<body>
 		
-		<div class="flex">
-            <div class="relative pt-4 md:pt-0">
-                <div class="cursor-pointer hover:text-eureka" id="lightDarkMode">
-                    <i class="fas fa-adjust"></i>
-                </div>
-                <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id="is-open">
-                </div>
-                <div class="absolute flex flex-col start-0 md:start-auto end-auto md:end-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40"
-                    id='lightDarkOptions'>
-                    <span class="px-4 py-1 hover:text-eureka" name="Light">浅色</span>
-                    <span class="px-4 py-1 hover:text-eureka" name="Dark">深色</span>
-                    <span class="px-4 py-1 hover:text-eureka" name="Auto">自动</span>
-                </div>
-            </div>
-        </div>
-    </div>
+		
 		<div class="main-container" id="mainc">
 			
 			<div class="section header grid-container">
@@ -238,6 +224,18 @@
 		</div>
 		<div class="copyright footer">
 			<p id="footerText">Copyright &copy </p>
+			 <!-- 計數器顯示區域 -->
+			 <div><span id="count">0</span></div>
+
+			 <script>
+				 // 獲取當前頁面的 URL
+				 const currentPage = window.location.pathname;
+				 // 使用 URL 作為鍵名存儲訪客數
+				 let count = localStorage.getItem(currentPage) ? parseInt(localStorage.getItem(currentPage)) : 0;
+				 count++;
+				 localStorage.setItem(currentPage, count);
+				 document.getElementById('count').innerText = count;
+			 </script>
 		</div>
 		
 		<script type="text/javascript">
@@ -245,5 +243,6 @@
 			var todayYear = today.getFullYear();
 			document.getElementById("footerText").innerHTML += String(todayYear) + " Guo Hua";
 		</script>
+		
 	</body>
 </html>
