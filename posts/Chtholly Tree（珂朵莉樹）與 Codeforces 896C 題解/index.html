@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chtholly Tree（珂朵莉樹）與 Codeforces 896C 題解</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+
+    <script src="prism.js"></script>
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+        </script>
+    <!-- Prism.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <!-- Prism.js JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+</head>
+
+<body>
+    <div class="content-container">
+        <h1>Chtholly Tree（珂朵莉樹）與 Codeforces 896C 題解</h1>
+
+        <div class="meta-info">
+            <div>
+                <i class="fas fa-calendar"></i>
+                2025-02-08
+            </div>
+            <div>
+                <i class="fas fa-clock"></i>
+                10分鐘閱讀
+            </div>
+        </div>
+
+        <h2>前言</h2>
+
+        <p>珂朵莉樹（Chtholly Tree）起源於 <a href="https://codeforces.com/problemset/problem/896/C">CF 896C</a>，名字起源於<span
+                style="color: blue;">末日三問</span>的珂朵莉，先是介紹劇情然後講到聖劍的護身符組成再帶到程式。</p>
+        <p>珂朵莉樹是一種暴力資料結構，常用於有大量區間推平操作而資料隨機的題目，如果資料不隨機也可以用來騙分。</p>
+        <img src="Chtholly.jpg" alt="Chtholly" class="placeholder-image" width="600" height="400">
+
+
+        <h2>Chtholly Tree 的核心概念</h2>
+        <div class="section">
+            <h3>1. 什麼是 Chtholly Tree？</h3>
+            <p>Chtholly Tree 的核心思想是將數列劃分為「值相同的區間」，用 <code>std::set</code>
+                存儲區間資訊。當區間發生變化時，只拆分受影響的部分，保持其他區間不變，從而減少操作次數。區間合併：如果相鄰區間的值相同，則合併為一個區間，以降低數據結構的大小，提高運行效率。</p>
+        </div>
+
+
+        <div class="section">
+            <h3>2. 什麼時候使用 Chtholly Tree？</h3>
+            <p>✅ 適合場景：</p>
+            <ul>
+                <li>區間加法 / 乘法</li>
+                <li>區間賦值</li>
+                <li>區間第 k 小</li>
+                <li>區間冪和</li>
+                <li>動態維護區間</li>
+            </ul>
+            <p>❌ 不適合場景：</p>
+            <ul>
+                <li>單點查詢與修改（線段樹或樹狀數組更快）</li>
+                <li>數據非隨機，惡意構造測資可能導致超時</li>
+                <li>頻繁查詢區間和（需 O(m) 遍歷，可能比線段樹慢）</li>
+            </ul>
+        </div>
+        <h2>Codeforces 896C 題目</h2>
+        <div class="section">
+
+            <h3>題目描述</h3>
+            <br>
+            <a href="https://codeforces.com/problemset/problem/896/C">原文題目連結</a>
+            <p>給定一個長度為 \( n \) 的數列 \( a \)，以及 \( m \) 個操作，操作分為以下四種：</p>
+            <ol>
+                <li>區間加法：將區間 \([l, r]\) 內的所有數加上 \( x \)。</li>
+                <li>區間賦值：將區間 \([l, r]\) 內的所有數設為 \( x \)。</li>
+                <li>區間第 k 小：查詢區間 \([l, r]\) 內的第 k 小的數。</li>
+                <li>區間冪和：計算區間 \([l, r]\) 內所有數的 \( x \) 次方的和，並對 \( y \) 取模。</li>
+            </ol>
+            <p>請實現一個程序，處理這些操作。</p>
+        </div>
+        <div class="section">
+            <h3>輸入格式</h3>
+            <br>
+            <p>這道題目的輸入格式比較特殊，需要選手通過 <code>seed</code> 自己生成輸入數據。輸入一行四個整數：</p>
+            <pre><code>n, m, seed, Vmax</code></pre>
+            <p>其中：</p>
+            <ul>
+                <li>n 表示數列長度。</li>
+                <li>m 表示操作次數。</li>
+                <li>seed 和 Vmax 用於生成輸入數據。</li>
+            </ul>
+            <p>數據生成的偽代碼如下：</p>
+            <pre><code class="language-css">def rnd():
+
+    ret = seed
+    seed = (seed * 7 + 13) mod 1000000007
+    return ret
+
+for i = 1 to n:
+
+    a[i] = (rnd() mod vmax) + 1
+
+for i = 1 to m:
+
+    op = (rnd() mod 4) + 1
+    l = (rnd() mod n) + 1
+    r = (rnd() mod n) + 1
+
+    if (l > r): 
+            swap(l, r)
+
+    if (op == 3):
+        x = (rnd() mod (r - l + 1)) + 1
+    else:
+        x = (rnd() mod vmax) + 1
+
+    if (op == 4):
+        y = (rnd() mod vmax) + 1
+    </code></pre>
+        </div>
+        <div class="section">
+            <h3>輸出格式</h3>
+            <p>對於每個操作 3 和 4，輸出對應的結果。</p>
+        </div>
+
+        <div class="section">
+            <h3>範例輸入</h3>
+            <pre><code class="language-plaintext">10 10 7 9
+1 3 9 3 0
+2 1 4 8 0
+3 1 10 1 0
+4 2 6 9 7</code></pre>
+        </div>
+
+        <div class="section">
+            <h3>範例輸出</h3>
+            <pre><code class="language-plaintext">8
+1</code></pre>
+        </div>
+
+
+        <h2>Chtholly Tree 的核心函數</h2>
+        <div class="section">
+            <h3>1. Node 結構</h3>
+            <p><br>Chtholly Tree 的核心實作依賴 <code>std::set&lt;Node&gt;</code>
+                其中 <code>Node</code> 定義如下：</p>
+            <pre><code class="language-css">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+#define int long long
+
+struct Node {
+    int l, r;
+    int val;
+};
+
+signed main() {
+    Node node = {1, 2, 3};
+    cout &lt;&lt; "Hello, World!" &lt;&lt; endl;
+    return 0;</code></pre>
+            <p>其中：</p>
+            <ul>
+                <li><code>l, r</code> 表示區間 [l, r]</li>
+                <li><code>v</code> 表示區間內的值</li>
+                <li><code>operator&lt;</code> 讓 <code>std::set</code> 按照 <code>l</code> 排序</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>2. split(x) - 區間分裂</h3>
+            <p><br>當我們需要修改 [l, r] 的區間時，首先要確保 l 和 r 是某個區間的邊界，如果不是，則使用 split(x) 來拆分區間：</p>
+            <pre><code class="language-css">it split(int x) {
+    if (x > n) return ct.end();
+        it iter = --ct.upper_bound(Node(x, 0, 0));
+    if (iter->l == x) return iter;
+    int l = iter->l, r = iter->r, v = iter->v;
+    ct.erase(iter);
+    ct.insert(Node(l, x - 1, v));
+    return ct.insert(Node(x, r, v)).first;
+}</code></pre>
+            <p>🔹 時間複雜度：O(log n)（因為 std::set 的插入和刪除都是 O(log n)）</p>
+        </div>
+
+        <div class="section">
+            <h3>3. assign(l, r, v) - 區間賦值</h3>
+            <p><br>當我們想要把 [l, r] 內的數設為 v 時：</p>
+            <pre><code class="language-css">void assign(int l, int r, int v) {
+    it itr = split(r + 1), itl = split(l);
+    ct.erase(itl, itr);
+    ct.insert(Node(l, r, v));
+}</code></pre>
+            <p>🔹 時間複雜度：O(m log n)（隨機情況下 O(log n log log n)）</p>
+        </div>
+
+        <div class="section">
+            <h3>4. add(l, r, v) - 區間加法</h3>
+            <p><br>對 [l, r] 內的所有數加上 v：</p>
+            <pre><code class="language-css">void add(int l, int r, int v) {
+    it itr = split(r + 1), itl = split(l);
+    for (; itl != itr; ++itl) {
+        itl->v += v;
+    }
+}</code></pre>
+            <p>🔹 時間複雜度：O(log n log log n)（隨機情況下表現優異）</p>
+        </div>
+
+        <div class="section">
+            <h3>5. kth(l, r, k) - 區間第 k 小</h3>
+            <p><br>先將 [l, r] 內的數收集到 vector，再排序後查找：</p>
+            <pre><code class="language-css">int kth(int l, int r, int k) {
+    vector&lt;pair&lt;int, int&gt;&gt; a;
+    it itr = split(r + 1), itl = split(l);
+    for (it iter = itl; iter != itr; iter++)
+        a.push_back({iter->v, iter->r - iter->l + 1});
+    sort(a.begin(), a.end());
+    for (auto &p : a) {
+        k -= p.second;
+        if (k <= 0) return p.first;
+    }
+    return -1;
+}</code></pre>
+            <p>🔹 時間複雜度：O(log n + m log m)（排序需要 O(m log m)）</p>
+        </div>
+
+
+
+        <h2>為什麼 Chtholly Tree 是「騙分神器」？</h2>
+        <p>Chtholly Tree 並不是真正的最優解，但：</p>
+        <ul>
+            <li>隨機數據時，它的區間數量較少，所以表現比線段樹好 (O(log n log log n))。</li>
+            <li>惡意測資下，它的區間數量可達 O(n)，變成 O(n log n)，甚至超時。</li>
+        </ul>
+        <p>⚠️ Codeforces 896C 設計為隨機數據，因此 Chtholly Tree 表現極佳！但如果你要解的是惡意測資題，請謹慎使用！</p>
+
+        <h2>總結</h2>
+        <p>✅ 適合區間修改與查詢問題</p>
+        <p>✅ 隨機數據下表現優異</p>
+        <p>❌ 惡意測資時可能超時</p>
+        <p>✅ 很好騙分</p>
+
+        <h2>完整代碼實現</h2>
+        <div class="section">
+            <h3>C. Willem, Chtholly and Seniorious 完整代碼</h3>
+            <pre><code class="language-css">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+#define int long long
+
+struct Node {
+    int l, r;
+    mutable int v;
+    Node(int L, int R, int V) : l(L), r(R), v(V) {}
+    bool operator&lt;(const Node &amp;o) const { return l &lt; o.l; }
+};
+
+set&lt;Node&gt; ct;
+typedef set&lt;Node&gt;::iterator it;
+
+int n, m; 
+
+it split(int x) {
+    if (x &gt; n) return ct.end();
+    it iter = --ct.upper_bound(Node(x, 0, 0));
+    if (iter-&gt;l == x) return iter;
+    int l = iter-&gt;l, r = iter-&gt;r, v = iter-&gt;v;
+    ct.erase(iter);
+    ct.insert(Node(l, x - 1, v));
+    return ct.insert(Node(x, r, v)).first;
+}
+
+void assign(int l, int r, int v) {
+    it itr = split(r + 1), itl = split(l);
+    ct.erase(itl, itr);
+    ct.insert(Node(l, r, v));
+}
+
+void add(int l, int r, int v) {
+    it itr = split(r + 1), itl = split(l);
+    for (; itl != itr; ++itl) {
+        itl-&gt;v += v;
+    }
+}
+
+int kth(int l, int r, int k) {
+    vector&lt;pair&lt;int, int&gt;&gt; a;
+    it itr = split(r + 1), itl = split(l);
+    for (it iter = itl; iter != itr; iter++)
+        a.push_back({iter-&gt;v, iter-&gt;r - iter-&gt;l + 1});
+    sort(a.begin(), a.end());
+    for (auto &amp;p : a) {
+        k -= p.second;
+        if (k &lt;= 0) return p.first;
+    }
+    return -1;
+}
+
+int powmod(int a, int b, int mod) {
+    int res = 1;
+    a %= mod;
+    while (b) {
+        if (b &amp; 1) res = res * a % mod;
+        a = a * a % mod;
+        b &gt;&gt;= 1;
+    }
+    return res;
+}
+
+int sum(int l, int r, int x, int y) {
+    it itr = split(r + 1), itl = split(l);
+    int res = 0;
+    for (; itl != itr; ++itl) {
+        res = (res + (itl-&gt;r - itl-&gt;l + 1) * powmod(itl-&gt;v, x, y)) % y;
+    }
+    return res;
+}
+
+signed main() {
+    int seed, vmax;
+    cin &gt;&gt; n &gt;&gt; m &gt;&gt; seed &gt;&gt; vmax;
+
+    auto rnd = [&amp;]() -&gt; int {
+        int ret = seed;
+        seed = (seed * 7 + 13) % 1000000007;
+        return ret;
+    };
+
+    for (int i = 1; i &lt;= n; i++) {
+        int a = rnd() % vmax + 1;
+        ct.insert(Node(i, i, a));
+    }
+
+    for (int i = 1; i &lt;= m; i++) {
+        int op = rnd() % 4 + 1;
+        int l = rnd() % n + 1;
+        int r = rnd() % n + 1;
+        if (l &gt; r) swap(l, r);
+        int x, y = 0;
+        if (op == 3) x = rnd() % (r - l + 1) + 1;
+        else x = rnd() % vmax + 1;
+        if (op == 4) y = rnd() % vmax + 1;
+
+        if (op == 1) add(l, r, x);
+        else if (op == 2) assign(l, r, x);
+        else if (op == 3) cout &lt;&lt; kth(l, r, x) &lt;&lt; endl;
+        else if (op == 4) cout &lt;&lt; sum(l, r, x, y) &lt;&lt; endl;
+    }
+
+    return 0;
+}</code></pre>
+        </div>
+
+        <h2>參考資料</h2>
+        <ul>
+            <li><a href="https://codeforces.com/problemset/problem/896/C" target="_blank">Codeforces 896C 題目連結</a></li>
+            <li><a href="https://oi-wiki.org/misc/odt/" target="_blank">珂朵莉树/颜色段均摊</a></li>
+            <li>Chtholly Tree 原論文與相關討論</li>
+        </ul>
+    </div>
+</body>
+
+</html>
