@@ -17,7 +17,7 @@
         <div class="meta-info">
             <div>
                 <i class="fas fa-calendar"></i>
-                2025-02-06
+                2025-02-08
             </div>
             <div>
                 <i class="fas fa-clock"></i>
@@ -185,5 +185,26 @@
         <li><a href="https://www.myphysicslab.com/pendulum/double-pendulum-en.html" target="_blank">MyPhysicsLab - Double Pendulum</a></li>
         <li>The Double Pendulum: Equations of Motion & Lagrangian Mechanics</li>
     </ul> 
+    <div class="copyright footer">
+        <p id="footerText">Copyright &copy </p>
+         <!-- 計數器顯示區域 -->
+         <div><span id="count">0</span></div>
+
+         <script>
+             // 獲取當前頁面的 URL
+             const currentPage = window.location.pathname;
+             // 使用 URL 作為鍵名存儲訪客數
+             let count = localStorage.getItem(currentPage) ? parseInt(localStorage.getItem(currentPage)) : 0;
+             count++;
+             localStorage.setItem(currentPage, count);
+             document.getElementById('count').innerText = count;
+         </script>
+    </div>
+    
+    <script type="text/javascript">
+        var today = new Date();
+        var todayYear = today.getFullYear();
+        document.getElementById("footerText").innerHTML += String(todayYear) + " Guo Hua";
+    </script>
 </body>
 </html>
