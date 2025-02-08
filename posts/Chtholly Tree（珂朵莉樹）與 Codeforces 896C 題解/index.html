@@ -360,18 +360,7 @@ signed main() {
     </div>
     <div class="copyright footer">
         <p id="footerText">Copyright &copy </p>
-         <!-- 計數器顯示區域 -->
-         <div><span id="count">0</span></div>
-
-         <script>
-             // 獲取當前頁面的 URL
-             const currentPage = window.location.pathname;
-             // 使用 URL 作為鍵名存儲訪客數
-             let count = localStorage.getItem(currentPage) ? parseInt(localStorage.getItem(currentPage)) : 0;
-             count++;
-             localStorage.setItem(currentPage, count);
-             document.getElementById('count').innerText = count;
-         </script>
+         
     </div>
     
     <script type="text/javascript">
@@ -379,6 +368,13 @@ signed main() {
         var todayYear = today.getFullYear();
         document.getElementById("footerText").innerHTML += String(todayYear) + " Guo Hua";
     </script>
+   <!-- hitwebcounter Code START -->
+<a href="https://www.hitwebcounter.com" target="_blank">
+    <img src="https://hitwebcounter.com/counter/counter.php?page=18937634&style=0007&nbdigits=4&type=page&initCount=0" title="Counter Widget" Alt="Visit counter For Websites"   border="0" /></a>                                    
+                                        
+                                            
+                                              
+                                
 </body>
 
 </html>
