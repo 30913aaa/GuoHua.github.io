@@ -26,7 +26,22 @@ body {
     background-attachment: fixed;
     background-size: cover;
 }
+.footer {
+	text-align: center;
+}
 
+.footer .link{
+	color: #acd;
+}
+.button,
+.copyright {
+	background: #dee5e7;
+	opacity:0.6;
+	line-height: 2em;
+	padding: .5em 1em;
+	color: #000000;
+	font-size: .9em
+}
 .content-container {
     background: white;
     padding: 20px;
